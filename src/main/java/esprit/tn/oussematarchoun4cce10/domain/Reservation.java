@@ -1,7 +1,7 @@
 package esprit.tn.oussematarchoun4cce10.domain;
 
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Reservation {
 
     @Id
@@ -29,4 +28,27 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private StatutReservation statut;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "vehicule_id", nullable = false)
+    private Vehicule vehicule;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "client_id", nullable = false)
+    private Client client;
+
+    @OneToOne(mappedBy = "reservation", fetch = FetchType.LAZY)
+    private Contrat contrat;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Reservation other)) return false;
+        return getIdReservation() != null && getIdReservation().equals(other.getIdReservation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Reservation.class.hashCode();
+    }
 }
